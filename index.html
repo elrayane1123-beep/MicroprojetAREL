@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Ma première app AR</title>
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script> 
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 
 <body>
-    <a-scene embedded
-    arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; trackingMethod: best ; changeMatrixMode: modelViewMatrix;"
-    renderer="sortObjects: true; antialias: true; colorManagement: true; logarithmicDepthBuffer: true;"
+  <a-scene embedded
+    arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    renderer="antialias: true; colorManagement: true; logarithmicDepthBuffer: true;"
+    vr-mode-ui="enabled: false">
 
-    vr-mode-ui="enabled: false"
+    <!-- Marqueur -->
+    <a-marker id="mymarker" type="barcode" value="0">
+      <!-- La vidéo projetée -->
+      <a-video src="#myVideo" width="4" height="2.25" position="0 0 -1" rotation="270 0 0"></a-video>
+    </a-marker>
 
-    smooth=" true" smoothCount="5" smoothTolerance=".05" smoothThreshold="5"
-    
-    sourceWidth="800" sourceHeight="600" displayWidth="1280" displayHeight="720">
-
-      
-        <a-marker type='barcode' value='0'>
-   
-            <a-text value="Hello team !" 
-            side="double" position = "0 0 -1" rotation="270 0 0" 
-            width="11"
-            color="red" align="center" >
-            </a-text>
-
-        </a-marker>
-
-        <a-entity camera></a-entity>
+    <a-entity camera></a-entity>
   </a-scene>
+
+  <!-- Vidéo source cachée -->
+  <video id="myVideo" src="assets/Astronaut in Spacesuit.mp4" loop muted playsinline crossorigin="anonymous" style="display:none"></video>
+
+  <script>
+    // Récupération des éléments
+    const marker = document.querySelector("#mymarker");
+    const myVideo = document.querySelector("#myVideo");
+
+    // Quand le marqueur est détecté → on joue la vidéo
+    marker.addEventListener("markerFound", () => {
+      myVideo.play();
+    });
+
+    // Quand le marqueur disparaît → on met en pause la vidéo
+    marker.addEventListener("markerLost", () => {
+      myVideo.pause();
+    });
+  </script>
 </body>
 </html>
